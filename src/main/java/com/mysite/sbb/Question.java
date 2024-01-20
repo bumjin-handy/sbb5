@@ -1,15 +1,15 @@
-package com.mysite;
+package com.mysite.sbb;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 class Question {
     @Id
