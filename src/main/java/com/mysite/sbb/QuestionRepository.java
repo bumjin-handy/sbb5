@@ -6,13 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
-    //Question findBySubject(String subject);
-    Optional<Question> findBySubject(String subject);
-    //List<Question> findBySubject(String subject);
+    Question findBySubject(String subject);
 
-    //Question findBySubjectAndContent(String subject, String content);
     Optional<Question> findBySubjectAndContent(String subject, String content);
 
     List<Question> findBySubjectLike(String subject);
-
 }

@@ -3,15 +3,15 @@ package com.mysite.sbb;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 import jakarta.persistence.*;
-import lombok.*;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
-class Question {
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -26,5 +26,4 @@ class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
-
 }
