@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.mysite.sbb.answer.Answer;
+import com.mysite.sbb.user.SiteUser;
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -22,6 +23,9 @@ public class Question {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @ManyToOne
+    private SiteUser author;
 
     private LocalDateTime createDate;
 
