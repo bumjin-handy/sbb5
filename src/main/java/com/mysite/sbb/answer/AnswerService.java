@@ -44,7 +44,12 @@ public class AnswerService {
     public void delete(Answer answer) {
         this.answerRepository.delete(answer);
     }
-
+    public void deleteAll() {
+        this.answerRepository.deleteAll();
+    }
+    public void deleteAllInBatch() {
+        this.answerRepository.deleteAllInBatch();
+    }
     public void vote(Answer answer, SiteUser siteUser) {
         answer.getVoter().add(siteUser);
         this.answerRepository.save(answer);
