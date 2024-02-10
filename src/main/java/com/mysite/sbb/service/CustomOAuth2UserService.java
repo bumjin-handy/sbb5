@@ -7,6 +7,7 @@ import com.mysite.sbb.dto.OAuth2Response;
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserRepository;
 import com.mysite.sbb.user.UserRole;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -53,7 +54,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String role = null;
         if (_siteUser.isEmpty()) {
-
+            //중복된 이메일 검사필요
+            //다른 SNS로 가인했거나 등등
+            String email = oAuth2Response.getEmail();
+            Optional<SiteUser> _userByEmail = userRepository.findByEmail(email);
+            if(_userByEmail.isPresent()) {
+                throw new DuplicateKeyException("email already exist in user table!!");
+            }
             SiteUser userEntity = new SiteUser();
             userEntity.setUsername(username);
             userEntity.setEmail(oAuth2Response.getEmail());

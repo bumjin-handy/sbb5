@@ -38,8 +38,9 @@ public class SecurityConfig {
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")
                         .defaultSuccessUrl("/"))
-                .oauth2Login((oauth2) -> {
-                    oauth2.userInfoEndpoint((userInfoEndpointConfig -> {
+                .oauth2Login((oauth2) -> {oauth2
+                        .loginPage("/login")
+                        .userInfoEndpoint((userInfoEndpointConfig -> {
                         userInfoEndpointConfig.userService(customOAuth2UserService);
                     }));
                 })
