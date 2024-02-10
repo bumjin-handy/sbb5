@@ -1,8 +1,10 @@
-package com.mysite.sbb;
+package com.mysite.sbb.config;
 
+import com.mysite.sbb.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -30,6 +38,12 @@ public class SecurityConfig {
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")
                         .defaultSuccessUrl("/"))
+                .oauth2Login((oauth2) -> {oauth2
+                        .loginPage("/login")
+                        .userInfoEndpoint((userInfoEndpointConfig -> {
+                        userInfoEndpointConfig.userService(customOAuth2UserService);
+                    }));
+                })
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")
