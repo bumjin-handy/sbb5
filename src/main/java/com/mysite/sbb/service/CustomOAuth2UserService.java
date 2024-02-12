@@ -1,5 +1,6 @@
 package com.mysite.sbb.service;
 
+import com.mysite.sbb.config.BoardPrincipal;
 import com.mysite.sbb.dto.CustomOAuth2User;
 import com.mysite.sbb.dto.GoogleReponse;
 import com.mysite.sbb.dto.NaverResponse;
@@ -49,8 +50,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
-        Optional<SiteUser> _siteUser = userRepository.findByUsername(username);
+        String userId = oAuth2Response.getProvider()+"_"+oAuth2Response.getProviderId();
+        Optional<SiteUser> _siteUser = userRepository.findByUserId(userId);
 
         String role = null;
         if (_siteUser.isEmpty()) {
@@ -62,22 +63,26 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 throw new DuplicateKeyException("email already exist in user table!!");
             }
             SiteUser userEntity = new SiteUser();
-            userEntity.setUsername(username);
+            userEntity.setUserId(userId);
             userEntity.setEmail(oAuth2Response.getEmail());
             userEntity.setRole(UserRole.USER.getValue());
 
             userRepository.save(userEntity);
+            return BoardPrincipal.from(userEntity);
         }
         else {
             SiteUser userEntity = _siteUser.get();
-            userEntity.setUsername(username);
+
+            /*userEntity.setUserId(userId);
             userEntity.setEmail(oAuth2Response.getEmail());
 
             role = _siteUser.get().getRole();
 
-            userRepository.save(_siteUser.get());
+            userRepository.save(_siteUser.get());*/
+            return BoardPrincipal.from(_siteUser.get());
         }
 
-        return new CustomOAuth2User(oAuth2Response, role);
+        //return new CustomOAuth2User(oAuth2Response, role);
+
     }
 }
