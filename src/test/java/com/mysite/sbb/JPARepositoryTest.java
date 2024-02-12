@@ -1,13 +1,12 @@
 package com.mysite.sbb;
 
-import com.mysite.sbb.answer.AnswerRepository;
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionRepository;
-import com.mysite.sbb.question.QuestionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -19,13 +18,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @DataJpaTest
+@Import(JPARepositoryTest.TestJpaConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-class SbbRepositoryTest {
+class JPARepositoryTest {
 
-	@Autowired
-	private QuestionRepository questionRepository;
+	private final QuestionRepository questionRepository;
 
+	JPARepositoryTest(
+			@Autowired QuestionRepository questionRepository
+	) {
+		this.questionRepository = questionRepository;
+	}
 	@Test
 	void testJpa() {
 		Question q1 = new Question();
@@ -51,5 +55,10 @@ class SbbRepositoryTest {
 			Question q3 = oq.get();
 			assertEquals("sbb가 무엇인가요?", q3.getSubject());
 		}
+	}
+
+
+	@TestConfiguration
+	static class TestJpaConfig {
 	}
 }
